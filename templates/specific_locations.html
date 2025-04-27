@@ -17,37 +17,31 @@
             color: white;
             margin-bottom: 30px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center; /* center the h1 */
         }
-
         .top-bar h1 {
             margin: 0;
             font-size: 28px;
             font-weight: 600;
         }
-
         .top-bar .nav-link {
             position: absolute;
-            left: 20px; /* stick it to the left */
+            left: 20px;
             color: #ecf0f1;
             text-decoration: none;
             font-size: 18px;
         }
-
         .top-bar .nav-link:hover {
             color: #3498db;
             text-decoration: underline;
         }
-
         h2, h3 {
             text-align: center;
             color: #2c3e50;
         }
-
         form {
             max-width: 400px;
             margin: 20px auto;
@@ -56,28 +50,23 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         label {
             display: block;
             margin-top: 15px;
             font-weight: bold;
         }
-
-        input[type="number"], select {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-
-        
         .button-group {
             display: flex;
-            gap: 10px; /* space between buttons */
+            gap: 10px;
             margin-top: 20px;
         }
-
         .button-group input[type="submit"],
         .button-group button[type="button"] {
             padding: 8px;
@@ -85,19 +74,16 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: auto; /* make button size fit text */
+            width: auto;
         }
-
         .button-group input[type="submit"] {
             background-color: #3498db;
             color: white;
         }
-
         .button-group button[type="button"] {
             background-color: red;
             color: white;
         }
-
         table {
             width: 80%;
             margin: 30px auto;
@@ -105,65 +91,68 @@
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
-
         th, td {
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-
         th {
             background-color: #3498db;
             color: white;
         }
-
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-
         tr:hover {
             background-color: #f1f1f1;
+        }
+        ul {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            list-style-type: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        ul li:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
 <body>
     <div class="top-bar">
         <h1>Traffic Violation Risk Predictor</h1>
-        <a href="/specific_locations" class="nav-link">Predict by Day/Hour</a>
-          </div>
+        <a href="/" class="nav-link">Back to Main</a>
     </div>
-    <form method="post">
-        <label for="day">Day of the Week:</label>
-        <select name="day" required>
-            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-            <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-        </select><br><br>
 
-        <label for="hour">Hour (0-23):</label>
-        <input type="number" name="hour" min="0" max="23" required><br><br>
+    <h2>Predict Most Likely Violations Based on Location</h2>
 
-        <label for="month">Month (1-12):</label>
-        <input type="number" name="month" min="1" max="12" required><br><br>
+    <form method="POST">
+        <label for="latitude">Latitude:</label>
+        <input type="text" name="latitude" required>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" name="longitude" required>
 
         <div class="button-group">
-            <input type="submit" value="Predict High-Risk Zones">
-            <button type="button" onclick="window.location.href='/'">Reset Form</button>
+            <input type="submit" value="Predict">
+            <button type="button" onclick="window.location.href='/specific_locations'">Reset Form</button>
         </div>
     </form>
 
     {% if results %}
-    <h3>Top 10 High-Risk Locations</h3>
-    <table border="1">
-        <tr><th>Location</th><th>Latitude</th><th>Longitude</th><th>Risk Probability</th></tr>
-        {% for row in results %}
-            <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-            </tr>
+        <h3>Top Predictions</h3>
+        <ul>
+        {% for vio, prob in results %}
+            <li>{{ vio }}: {{ prob }}</li>
         {% endfor %}
-    </table>
+        </ul>
     {% endif %}
 </body>
 </html>
