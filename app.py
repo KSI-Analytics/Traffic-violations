@@ -2,26 +2,43 @@ from flask import Flask, render_template, request
 import pandas as pd
 import joblib
 
-# Load model and data
-model = joblib.load("model1.pkl")
-df = pd.read_csv("cleaned_traffic_violations1.csv")
-
-# Flask app
+# Initialize Flask app
 app = Flask(__name__)
 
-# Day mapping
-day_map = {'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3,
-           'Friday': 4, 'Saturday': 5, 'Sunday': 6}
+# Load all models and preprocessing tools
+model = joblib.load("model1.pkl")  # Location-based risk model
+model1 = joblib.load("logistic_regression_violation_model.pkl")  # Violation prediction model
+model2 = joblib.load("accident_prediction_model.pkl")  # Simplified accident risk model
 
-@app.route("/", methods=["GET", "POST"])
-def index():
+# Load additional required objects
+df = pd.read_csv("location_summary.csv")
+scaler = joblib.load("scaler.pkl")
+imputer = joblib.load("imputer.pkl")
+input_columns = joblib.load("input_columns.pkl")
+
+# Helper: map weekday names to numeric codes
+day_map = {
+    'Monday': 0, 'Tuesday': 1, 'Wednesday': 2,
+    'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6
+}
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+# ----------------------------
+# Route: General location risk
+# ----------------------------
+@app.route("/day_and_time", methods=["GET", "POST"])
+def day_and_time():
     results = None
     if request.method == "POST":
         day = request.form["day"]
         hour = int(request.form["hour"])
         month = int(request.form["month"])
 
-        # Prepare input
+        # Prepare input data
         location_df = df[['location', 'location_cluster', 'latitude', 'longitude']].drop_duplicates()
         location_df['day_of_week'] = day_map[day]
         location_df['hour'] = hour
@@ -35,33 +52,90 @@ def index():
             ['location', 'latitude', 'longitude', 'risk_probability']
         ].round(3).values.tolist()
 
-    return render_template("index.html", results=results)
+    return render_template("based_on_day_and_time.html", results=results)
 
-model1 = joblib.load("logistic_regression_violation_model.pkl")
-
-# First route: latitude + longitude input
+# ---------------------------------------
+# Route: Specific location violation risk
+# ---------------------------------------
 @app.route("/specific_locations", methods=["GET", "POST"])
 def specific_locations():
     results = None
     if request.method == "POST":
         latitude = float(request.form["latitude"])
         longitude = float(request.form["longitude"])
-
         user_input = [latitude, longitude]
 
-        # Predict probabilities
         result = []
-        for v in model1.keys():
-            model = model1[v]
-            p = model.predict_proba([user_input])[0][1]
-            result.append((v, p))
+        for violation, m in model1.items():
+            prob = m.predict_proba([user_input])[0][1]
+            result.append((violation, prob))
 
-        # Sort and select top 4
+        # Top 4 violations
         top_violations = sorted(result, key=lambda x: x[1], reverse=True)[:4]
-
-        results = [(vio, round(prob, 3)) for vio, prob in top_violations]
+        results = [(v, round(p, 3)) for v, p in top_violations]
 
     return render_template("specific_locations.html", results=results)
 
+# -----------------------------------
+# Accident risk prediction logic
+# -----------------------------------
+def predict_accident_risk(input_dict):
+    df_input = pd.DataFrame([input_dict])
+    df_input_encoded = pd.get_dummies(df_input)
+    df_input_encoded = df_input_encoded.reindex(columns=input_columns, fill_value=0)
+    df_imputed = pd.DataFrame(imputer.transform(df_input_encoded), columns=input_columns)
+    df_scaled = scaler.transform(df_imputed)
+    prob = model2.predict_proba(df_scaled)[0][1]
+    return round(prob * 100, 2)
+
+def simplified_accident_risk(user_input):
+    base = {
+        'hour': 12,
+        'month': 6,
+        'day_of_week': 'Monday',
+        'gender': 'Male',
+        'race': 'Unknown',
+        'driver_state': 'MD',
+        'vehicle_type': 'PASSENGER CAR',
+        'arrest_type': 'Citation',
+        'belts': True,
+        'personal_injury': False,
+        'property_damage': True,
+        'fatal': False,
+        'alcohol': False,
+        'commercial_vehicle': False,
+        'hazmat': False,
+        'make': 12,
+        'model': 103
+    }
+    base.update(user_input)
+    return predict_accident_risk(base)
+
+# -------------------------------
+# Route: Simplified risk form UI
+# -------------------------------
+@app.route("/accidents_prediction", methods=["GET", "POST"])
+def accidents_prediction():
+    likelihood = None
+    if request.method == "POST":
+        hour = int(request.form["hour"])
+        day_of_week = request.form["day"]
+        vehicle_type = request.form["vehicle_type"]
+        alcohol = request.form.get("alcohol") == "on"
+        belts = request.form.get("belts") == "on"
+
+        user_input = {
+            "hour": hour,
+            "day_of_week": day_of_week,
+            "vehicle_type": vehicle_type,
+            "alcohol": alcohol,
+            "belts": belts
+        }
+
+        likelihood = simplified_accident_risk(user_input)
+
+    return render_template("accidents_prediction.html", likelihood=likelihood)
+
+# Run the app (optional for local testing)
 if __name__ == "__main__":
     app.run(debug=True)

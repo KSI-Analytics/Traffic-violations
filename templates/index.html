@@ -2,168 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Traffic Risk Predictor</title>
+    <title>Traffic Risk Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
             color: #333;
         }
-        .top-bar {
+
+        .header {
             background-color: #2c3e50;
-            padding: 20px;
-            color: white;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center; /* center the h1 */
-        }
-
-        .top-bar h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
-
-        .top-bar .nav-link {
-            position: absolute;
-            left: 20px; /* stick it to the left */
-            color: #ecf0f1;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .top-bar .nav-link:hover {
-            color: #3498db;
-            text-decoration: underline;
-        }
-
-        h2, h3 {
+            padding: 30px;
             text-align: center;
-            color: #2c3e50;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        form {
-            max-width: 400px;
-            margin: 20px auto;
-            background: #fff;
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 260px;
+            text-align: center;
+            transition: transform 0.2s ease;
         }
 
-        label {
-            display: block;
-            margin-top: 15px;
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .card a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
             font-weight: bold;
         }
 
-        input[type="number"], select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .card a:hover {
+            background-color: #2980b9;
         }
 
-        
-        .button-group {
-            display: flex;
-            gap: 10px; /* space between buttons */
-            margin-top: 20px;
-        }
-
-        .button-group input[type="submit"],
-        .button-group button[type="button"] {
-            padding: 8px;
-            font-size: 14px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: auto; /* make button size fit text */
-        }
-
-        .button-group input[type="submit"] {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .button-group button[type="button"] {
-            background-color: red;
-            color: white;
-        }
-
-        table {
-            width: 80%;
-            margin: 30px auto;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        th, td {
-            padding: 12px;
+        footer {
             text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
+            padding: 20px;
+            font-size: 14px;
+            color: #888;
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <h1>Traffic Violation Risk Predictor</h1>
-        <a href="/specific_locations" class="nav-link">Predict by Day/Hour</a>
-          </div>
+
+    <div class="header">
+        <h1>Traffic Risk Dashboard</h1>
     </div>
-    <form method="post">
-        <label for="day">Day of the Week:</label>
-        <select name="day" required>
-            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-            <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-        </select><br><br>
 
-        <label for="hour">Hour (0-23):</label>
-        <input type="number" name="hour" min="0" max="23" required><br><br>
-
-        <label for="month">Month (1-12):</label>
-        <input type="number" name="month" min="1" max="12" required><br><br>
-
-        <div class="button-group">
-            <input type="submit" value="Predict High-Risk Zones">
-            <button type="button" onclick="window.location.href='/'">Reset Form</button>
+    <div class="container">
+        <div class="card">
+            <h2>High-Risk Locations</h2>
+            <p>Predict the top 10 locations with the highest risk based on time and day.</p>
+            <a href="/day_and_time">Go to Predictor</a>
         </div>
-    </form>
+        <div class="card">
+            <h2>Violation Prediction</h2>
+            <p>Estimate the probability of various traffic violations at a specific location.</p>
+            <a href="/specific_locations">Predict Violations</a>
+        </div>
+        <div class="card">
+            <h2>Accident Risk Estimator</h2>
+            <p>Estimate accident risk using driver behavior and time factors.</p>
+            <a href="/accidents_prediction">Check Risk</a>
+        </div>
+    </div>
 
-    {% if results %}
-    <h3>Top 10 High-Risk Locations</h3>
-    <table border="1">
-        <tr><th>Location</th><th>Latitude</th><th>Longitude</th><th>Risk Probability</th></tr>
-        {% for row in results %}
-            <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
+
 </body>
 </html>
