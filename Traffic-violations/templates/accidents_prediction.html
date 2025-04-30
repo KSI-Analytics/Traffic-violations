@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accident Risk Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0px;
+            color: #333;
+        }
+        .top-bar {
+            background-color: #2c3e50;
+            padding: 20px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .top-bar .nav-link {
+            position: absolute;
+            left: 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .top-bar .nav-link:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-group input[type="submit"],
+        .button-group button[type="button"] {
+            padding: 8px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .button-group input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .button-group button[type="button"] {
+            background-color: red;
+            color: white;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Accident Risk Estimator</h1>
+        <a href="/" class="nav-link">Back to Main</a>
+    </div>
+    <h2>Predict Most Likely Accidents</h2>
+    <form method="POST">
+        <label for="hour">Hour (0–23):</label>
+        <input type="number" name="hour" min="0" max="23" required>
+
+        <label for="day">Day of Week:</label>
+        <select name="day">
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+        </select>
+
+        <label for="vehicle_type">Vehicle Type:</label>
+        <input type="text" name="vehicle_type" value="PASSENGER CAR" required>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="alcohol"> Alcohol Involved</label><br>
+            <label><input type="checkbox" name="belts" checked> Wearing Seatbelt</label>
+        </div>
+
+        <div class="button-group">
+            <input type="submit" value="Predict Risk">
+            <button type="button" onclick="window.location.href='/accidents_prediction'">Reset</button>
+        </div>
+    </form>
+
+    {% if likelihood is not none %}
+        <div class="result">
+            <h2>Estimated Accident Risk: {{ likelihood }}%</h2>
+        </div>
+    {% endif %}
+</body>
+</html>
