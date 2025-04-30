@@ -1,9 +1,27 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import joblib
+import os
+import gdown
 
 # Initialize Flask app
 app = Flask(__name__)
+
+def download_from_gdrive(file_id, dest):
+    if not os.path.exists(dest):
+        print(f"Downloading {dest} from Google Drive...")
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, dest, quiet=False)
+
+# Download files
+download_from_gdrive("1Lf3epVmFOSqQAVjg1pQbVinaQM28HRGD", "accident_prediction_model.pkl")
+download_from_gdrive("1__nipQcHr28L9vRNPfdWh3KuzsGIXKPE", "imputer.pkl")
+download_from_gdrive("1QziHYl72LejI-CpP2MdJyaz914BbgXRD", "input_columns.pkl")
+download_from_gdrive("1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL", "logistic_regression_violation_model.pkl")
+download_from_gdrive("1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM", "model1.pkl")
+download_from_gdrive("1GgtVjssevaXWgUlqKXUzON8snyOHbGZb", "scaler.pkl")
+download_from_gdrive("17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok", "location_summary.csv")
+
 
 # Load all models and preprocessing tools
 model = joblib.load("model1.pkl")  # Location-based risk model
