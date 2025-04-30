@@ -155,5 +155,8 @@ def accidents_prediction():
     return render_template("accidents_prediction.html", likelihood=likelihood)
 
 # Run the app (optional for local testing)
+server = app
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
+
