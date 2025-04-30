@@ -1,2 +1,4 @@
-gunicorn app:server --workers 4
+#!/bin/bash
+gunicorn --bind=0.0.0.0:$PORT app:app
+
 
