@@ -7,20 +7,34 @@ import gdown
 # Initialize Flask app
 app = Flask(__name__)
 
+import os
+import gdown
+
 def download_from_gdrive(file_id, dest):
     if not os.path.exists(dest):
         print(f"Downloading {dest} from Google Drive...")
         url = f"https://drive.google.com/uc?id={file_id}"
         gdown.download(url, dest, quiet=False)
+    else:
+        print(f"{dest} already exists. Skipping download.")
 
-# Download files
-download_from_gdrive("1Lf3epVmFOSqQAVjg1pQbVinaQM28HRGD", "accident_prediction_model.pkl")
-download_from_gdrive("1__nipQcHr28L9vRNPfdWh3KuzsGIXKPE", "imputer.pkl")
-download_from_gdrive("1QziHYl72LejI-CpP2MdJyaz914BbgXRD", "input_columns.pkl")
-download_from_gdrive("1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL", "logistic_regression_violation_model.pkl")
-download_from_gdrive("1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM", "model1.pkl")
-download_from_gdrive("1GgtVjssevaXWgUlqKXUzON8snyOHbGZb", "scaler.pkl")
-download_from_gdrive("17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok", "location_summary.csv")
+def download_all_models():
+    files_to_download = {
+        "accident_prediction_model.pkl": "1Lf3epVmFOSqQAVjg1pQbVinaQM28HRGD",
+        "imputer.pkl": "1__nipQcHr28L9vRNPfdWh3KuzsGIXKPE",
+        "input_columns.pkl": "1QziHYl72LejI-CpP2MdJyaz914BbgXRD",
+        "logistic_regression_violation_model.pkl": "1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL",
+        "model1.pkl": "1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM",
+        "scaler.pkl": "1GgtVjssevaXWgUlqKXUzON8snyOHbGZb",
+        "location_summary.csv": "17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok"
+    }
+
+    for filename, file_id in files_to_download.items():
+        download_from_gdrive(file_id, filename)
+
+# Usage
+download_all_models()
+
 
 
 # Load all models and preprocessing tools
