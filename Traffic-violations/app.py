@@ -20,12 +20,12 @@ def download_from_gdrive(file_id, dest):
 
 def download_all_models():
     files_to_download = {
-        "accident_prediction_model.pkl": "1Lf3epVmFOSqQAVjg1pQbVinaQM28HRGD",
-        "imputer.pkl": "1__nipQcHr28L9vRNPfdWh3KuzsGIXKPE",
-        "input_columns.pkl": "1QziHYl72LejI-CpP2MdJyaz914BbgXRD",
+        "accident_prediction_model.pkl": "1b6dWIeUduaVJLV8cswnQ1LkdE93rDze7",
+        "imputer.pkl": "1I29lIxffoCA9_9Nuroide9l5WmrA9Mpm",
+        "input_columns.pkl": "18lp7B5sZT88fbMTmQh1C65iFaml2uQO_",
         "logistic_regression_violation_model.pkl": "1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL",
         "model1.pkl": "1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM",
-        "scaler.pkl": "1GgtVjssevaXWgUlqKXUzON8snyOHbGZb",
+        "scaler.pkl": "1K1ySVMgYxbMPoNzIteONByST6LGXy_GD",
         "location_summary.csv": "17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok"
     }
 
