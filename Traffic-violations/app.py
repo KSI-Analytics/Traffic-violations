@@ -169,8 +169,6 @@ def accidents_prediction():
     return render_template("accidents_prediction.html", likelihood=likelihood)
 
 # Run the app (optional for local testing)
-server = app
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
