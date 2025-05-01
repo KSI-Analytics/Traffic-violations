@@ -1,41 +1,9 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import joblib
-import os
-import gdown
 
 # Initialize Flask app
 app = Flask(__name__)
-
-import os
-import gdown
-
-def download_from_gdrive(file_id, dest):
-    if not os.path.exists(dest):
-        print(f"Downloading {dest} from Google Drive...")
-        url = f"https://drive.google.com/uc?id={file_id}"
-        gdown.download(url, dest, quiet=False)
-    else:
-        print(f"{dest} already exists. Skipping download.")
-
-def download_all_models():
-    files_to_download = {
-        "accident_prediction_model.pkl": "1b6dWIeUduaVJLV8cswnQ1LkdE93rDze7",
-        "imputer.pkl": "1I29lIxffoCA9_9Nuroide9l5WmrA9Mpm",
-        "input_columns.pkl": "18lp7B5sZT88fbMTmQh1C65iFaml2uQO_",
-        "logistic_regression_violation_model.pkl": "1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL",
-        "model1.pkl": "1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM",
-        "scaler.pkl": "1K1ySVMgYxbMPoNzIteONByST6LGXy_GD",
-        "location_summary.csv": "17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok"
-    }
-
-    for filename, file_id in files_to_download.items():
-        download_from_gdrive(file_id, filename)
-
-# Usage
-download_all_models()
-
-
 
 # Load all models and preprocessing tools
 model = joblib.load("model1.pkl")  # Location-based risk model
@@ -170,6 +138,6 @@ def accidents_prediction():
 
 # Run the app (optional for local testing)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host='0.0.0.0', port=8000)
+
 
