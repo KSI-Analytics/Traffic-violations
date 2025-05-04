@@ -12,15 +12,25 @@ def download_from_gdrive(file_id, dest):
         print(f"Downloading {dest} from Google Drive...")
         url = f"https://drive.google.com/uc?id={file_id}"
         gdown.download(url, dest, quiet=False)
+    else:
+        print(f"{dest} already exists. Skipping download.")
 
-# Download files
-download_from_gdrive("1Lf3epVmFOSqQAVjg1pQbVinaQM28HRGD", "accident_prediction_model.pkl")
-download_from_gdrive("1__nipQcHr28L9vRNPfdWh3KuzsGIXKPE", "imputer.pkl")
-download_from_gdrive("1QziHYl72LejI-CpP2MdJyaz914BbgXRD", "input_columns.pkl")
-download_from_gdrive("1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL", "logistic_regression_violation_model.pkl")
-download_from_gdrive("1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM", "model1.pkl")
-download_from_gdrive("1GgtVjssevaXWgUlqKXUzON8snyOHbGZb", "scaler.pkl")
-download_from_gdrive("17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok", "location_summary.csv")
+def download_all_models():
+    files_to_download = {
+        "accident_prediction_model.pkl": "1b6dWIeUduaVJLV8cswnQ1LkdE93rDze7",
+        "imputer.pkl": "1I29lIxffoCA9_9Nuroide9l5WmrA9Mpm",
+        "input_columns.pkl": "18lp7B5sZT88fbMTmQh1C65iFaml2uQO_",
+        "logistic_regression_violation_model.pkl": "1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL",
+        "model1.pkl": "1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM",
+        "scaler.pkl": "1K1ySVMgYxbMPoNzIteONByST6LGXy_GD",
+        "location_summary.csv": "17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok"
+    }
+
+    for filename, file_id in files_to_download.items():
+        download_from_gdrive(file_id, filename)
+
+# Usage
+download_all_models()
 
 
 # Load all models and preprocessing tools
@@ -44,7 +54,6 @@ day_map = {
 def home():
     return render_template("index.html")
 
-
 # ----------------------------
 # Route: General location risk
 # ----------------------------
@@ -56,8 +65,8 @@ def day_and_time():
         hour = int(request.form["hour"])
         month = int(request.form["month"])
 
-        # Prepare input data
-        location_df = df[['location', 'location_cluster', 'latitude', 'longitude']].drop_duplicates()
+        # Prepare data
+        location_df = df[['location', 'location_cluster', 'latitude', 'longitude']].copy()
         location_df['day_of_week'] = day_map[day]
         location_df['hour'] = hour
         location_df['month'] = month
@@ -65,12 +74,28 @@ def day_and_time():
         input_features = ['location_cluster', 'longitude', 'latitude', 'month']
         X_input = location_df[input_features]
 
+        # Predict risk
         location_df['risk_probability'] = model.predict_proba(X_input)[:, 1]
-        results = location_df.sort_values(by='risk_probability', ascending=False).head(10)[
-            ['location', 'latitude', 'longitude', 'risk_probability']
-        ].round(3).values.tolist()
+
+        # Sort by risk
+        location_df = location_df.sort_values(by='risk_probability', ascending=False)
+
+        # Round lat/lon to group nearby points 
+        location_df['lat_rounded'] = location_df['latitude'].round(3)
+        location_df['lon_rounded'] = location_df['longitude'].round(3)
+
+        # Drop near-duplicate locations
+        location_df = location_df.drop_duplicates(subset=['lat_rounded', 'lon_rounded'])
+
+        # Take top 10
+        results = location_df.head(10)[['location', 'latitude', 'longitude', 'risk_probability']].round(3).values.tolist()
+
+
 
     return render_template("based_on_day_and_time.html", results=results)
+
+
+
 
 # ---------------------------------------
 # Route: Specific location violation risk
