@@ -29,14 +29,13 @@ def download_all_models():
     for filename, file_id in files_to_download.items():
         download_from_gdrive(file_id, filename)
 
-# Usage
 download_all_models()
 
 
 # Load all models and preprocessing tools
 model = joblib.load("model1.pkl")  # Location-based risk model
 model1 = joblib.load("logistic_regression_violation_model.pkl")  # Violation prediction model
-model2 = joblib.load("accident_prediction_model.pkl")  # Simplified accident risk model
+model2 = joblib.load("accident_prediction_model.pkl")  # accident risk model
 
 # Load additional required objects
 df = pd.read_csv("location_summary.csv")
@@ -44,7 +43,7 @@ scaler = joblib.load("scaler.pkl")
 imputer = joblib.load("imputer.pkl")
 input_columns = joblib.load("input_columns.pkl")
 
-# Helper: map weekday names to numeric codes
+# map weekday names to numeric codes
 day_map = {
     'Monday': 0, 'Tuesday': 1, 'Wednesday': 2,
     'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6
@@ -54,9 +53,9 @@ day_map = {
 def home():
     return render_template("index.html")
 
-# ----------------------------
-# Route: General location risk
-# ----------------------------
+
+# Route:  High-Risk Locations model
+
 @app.route("/day_and_time", methods=["GET", "POST"])
 def day_and_time():
     results = None
@@ -97,9 +96,8 @@ def day_and_time():
 
 
 
-# ---------------------------------------
-# Route: Specific location violation risk
-# ---------------------------------------
+# Route: Violation Prediction model
+
 @app.route("/specific_locations", methods=["GET", "POST"])
 def specific_locations():
     results = None
@@ -119,9 +117,8 @@ def specific_locations():
 
     return render_template("specific_locations.html", results=results)
 
-# -----------------------------------
-# Accident risk prediction logic
-# -----------------------------------
+# Accident Risk Estimator
+
 def predict_accident_risk(input_dict):
     df_input = pd.DataFrame([input_dict])
     df_input_encoded = pd.get_dummies(df_input)
@@ -154,9 +151,7 @@ def simplified_accident_risk(user_input):
     base.update(user_input)
     return predict_accident_risk(base)
 
-# -------------------------------
-# Route: Simplified risk form UI
-# -------------------------------
+
 @app.route("/accidents_prediction", methods=["GET", "POST"])
 def accidents_prediction():
     likelihood = None
