@@ -47,9 +47,9 @@
 - Output: Probability of accident for each stop record
 
 ## 3. Violation Probability Estimator by Location
-### Model: Multiple Binary Logistic Regression Models
+### Model: Gradient Boosting Classifier
 ### Objective: Predict the probability of specific violation types based solely on location (latitude & longitude).
-- One logistic model per violation type: accident, alcohol, personal injury, property damage, fatal, hazmat, seat belt
+- One Gradient Boosting Classifier model per violation type: accident, alcohol, personal injury, property damage, fatal, hazmat, seat belt
 - Returns top 4 most likely violations for any coordinate input
 - Enables geospatial risk assessment and planning
 
