@@ -64,3 +64,5 @@
 ### Step 3: Run the app
 - python app.py
 - Then open http://localhost:5000 in your browser.
+
+### The link to presentation : https://docs.google.com/presentation/d/1sgDy43Iur2q5BfV2G8ye_bhN6uijMA_2nr7FazKcdDk/edit?usp=sharing
