@@ -20,7 +20,7 @@ def download_all_models():
         "accident_prediction_model.pkl": "1b6dWIeUduaVJLV8cswnQ1LkdE93rDze7",
         "imputer.pkl": "1I29lIxffoCA9_9Nuroide9l5WmrA9Mpm",
         "input_columns.pkl": "18lp7B5sZT88fbMTmQh1C65iFaml2uQO_",
-        "logistic_regression_violation_model.pkl": "1xwXjT6AYgmAXTIX-PVYP8wXq-B20y-SL",
+        "Gradient_Boosting_model.pkl": "1b6yg8Oj7G8ACUOSadeF81qhzwx_dFJL0",
         "model1.pkl": "1kGDI9u8RR_14iI4mOGiXCVwaREUi03VM",
         "scaler.pkl": "1K1ySVMgYxbMPoNzIteONByST6LGXy_GD",
         "location_summary.csv": "17LO74gLpDDYCI9gXT-5ifB66KJQMG5Ok"
@@ -34,7 +34,7 @@ download_all_models()
 
 # Load all models and preprocessing tools
 model = joblib.load("model1.pkl")  # Location-based risk model
-model1 = joblib.load("logistic_regression_violation_model.pkl")  # Violation prediction model
+model1 = joblib.load("Gradient_Boosting_model.pkl")  # Violation prediction model
 model2 = joblib.load("accident_prediction_model.pkl")  # accident risk model
 
 # Load additional required objects
