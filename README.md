@@ -1,8 +1,8 @@
 # Traffic Violation Predictions
-## Traffic Violation Predictions is a machine learning web app built to analyze and predict various traffic-related risks using over 1.6 million traffic stop records from Montgomery County, Maryland (2012 to 2025). The application provides insights into high-risk periods, accident likelihood, and potential violations by location. It is designed to support data-driven decisions in public safety and enforcement planning.
+### Traffic Violation Predictions is a machine learning web app built to analyze and predict various traffic-related risks using over 1.6 million traffic stop records from Montgomery County, Maryland (2012 to 2025). The application provides insights into high-risk periods, accident likelihood, and potential violations by location. It is designed to support data-driven decisions in public safety and enforcement planning.
 
 # Project Overview
-## This project uses a large-scale dataset to explore and model three main traffic safety tasks:
+### This project uses a large-scale dataset to explore and model three main traffic safety tasks:
 - High-Risk Time Prediction by Location
 - Accident Occurrence Prediction
 - Violation Probability Estimation by Coordinates
